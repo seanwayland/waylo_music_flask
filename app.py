@@ -1,7 +1,7 @@
 from flask import Flask, render_template, send_from_directory, send_file, redirect
 import boto3
 from config import access_key_id, secret_access_key, S3_BUCKET
-
+from pathlib import Path
 
 
 AWS_S3_SIGNATURE_VERSION = "s3v4"
@@ -12,6 +12,18 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     return render_template('index.html')
+
+
+@app.route('/yeah')
+def yeah():
+    return ('yeah')
+
+@app.route('/filedrop/')
+def indexoo():
+    p =  Path(app.static_folder, 'files')
+    filenames = [x.relative_to(app.static_folder) for x in p.iterdir() if x.is_file()]
+    return render_template('files.html', **locals())
+
 
 @app.route('/rail_mary/')
 def hello_mary():
@@ -37,6 +49,13 @@ def return_files_skinny():
                 return send_file('skinny_dennis.zip')
         except Exception as e:
                 return str(e)
+        
+@app.route('/return-plugins/')
+def return_plugins():
+        try:
+                return send_file('plugins_2023.zip')
+        except Exception as e:
+                return str(e)
 
 @app.route('/return_rail_mary_album/')
 def return_rail_mary():
@@ -60,5 +79,10 @@ def return_expanded_ablum():
         except Exception as e:
                 return str(e)
 
-
+@app.route('/return-oz-charts/')
+def return_oz_charts():
+        try:
+                return send_file('oz_jan_2024.zip')
+        except Exception as e:
+                return str(e)
 
